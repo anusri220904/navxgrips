@@ -7,228 +7,264 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: sans-serif;
-            margin: 0;
-            background-color: #000;
-            color: #fff;
-            line-height: 1.6;
+   <style>
+    body {
+        font-family: sans-serif;
+        margin: 0;
+        background-color: #000;
+        color: #fff;
+        line-height: 1.6;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+    }
+
+    body.loaded {
+        opacity: 1;
+    }
+
+    header {
+        background: linear-gradient(to right, #ff0000, #8b0000);
+        padding: 1rem; /* Slightly reduced padding for mobile */
+        font-family: 'Anton', sans-serif;
+        animation: slideDown 1s ease;
+        text-align: center;
+    }
+
+    @keyframes slideDown {
+        from {
+            transform: translateY(-100%);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    header .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px; /* Reduced gap for mobile */
+        flex-direction: column;
+    }
+
+    header img {
+        height: 80px; /* Slightly smaller logo for mobile */
+        width: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    header h1 {
+        font-size: 2.5rem; /* Smaller heading for mobile */
+        margin: 0;
+        letter-spacing: 1px; /* Reduced letter spacing for mobile */
+    }
+
+    header p {
+        font-size: 1rem;
+        margin-top: 0.3rem;
+        font-weight: 300;
+        text-align: center;
+    }
+
+    .products {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem; /* Reduced gap for mobile */
+        padding: 1rem; /* Reduced padding for mobile */
+        animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
             opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+            transform: translateY(20px); /* Slightly less translation for mobile */
         }
-
-        body.loaded {
+        to {
             opacity: 1;
+            transform: translateY(0);
         }
+    }
 
-        header {
-            background: linear-gradient(to right, #ff0000, #8b0000);
-            padding: 1.5rem;
-            font-family: 'Anton', sans-serif;
-            animation: slideDown 1s ease;
-            text-align: center;
-        }
+    .product {
+        background: #1c1c1c;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100%);
-            }
-            to {
-                transform: translateY(0);
-            }
-        }
+    .product:hover {
+        transform: scale(1.03); /* Slightly less scale on hover for mobile */
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+    }
 
-        header .header-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            flex-direction: column;
-        }
+    .product-slider {
+        position: relative;
+        width: 100%;
+        height: 375px; /* Reduced fixed height for mobile */
+        overflow: hidden;
+    }
 
-        header img {
-            height: 100px;
-            width: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
+    .product-slider img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+    }
 
-        header h1 {
-            font-size: 3rem;
-            margin: 0;
-            letter-spacing: 2px;
-        }
+    .product-slider img.active {
+        opacity: 1;
+    }
 
-        header p {
-            font-size: 1.2rem;
-            margin-top: 0.5rem;
-            font-weight: 300;
-            text-align: center;
-        }
+    .slider-controls {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        transform: translateY(-50%);
+        display: flex;
+        justify-content: space-between;
+        padding: 0 10px;
+        z-index: 10; /* Ensure arrows are above the images */
+    }
 
-        .products {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 2rem;
-            animation: fadeIn 1s ease;
-        }
+    .slider-controls button {
+        background: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
+    }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    .slider-controls button:hover {
+        opacity: 1;
+    }
 
-        .product {
-            background: #1c1c1c;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+    .prev-btn, .next-btn {
+        -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+    }
 
-        .product:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
-        }
+    .product-info {
+        padding: 0.8rem; /* Reduced padding for mobile */
+    }
 
-        .product-slider {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            overflow: hidden;
-        }
+    .product h3 {
+        font-family: 'Anton', sans-serif;
+        font-size: 1.3rem; /* Smaller font size for mobile */
+        color: #ff2e2e;
+        margin-bottom: 0.3rem;
+    }
 
-        .product-slider img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
+    .product p {
+        font-size: 0.9rem;
+        color: #ccc;
+        margin: 0.4rem 0;
+    }
 
-        .product-slider img.active {
-            opacity: 1;
-        }
+    .btn-add {
+        background: #ff2e2e;
+        color: #fff;
+        padding: 8px 12px; /* Slightly smaller padding for mobile */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 8px;
+        font-size: 0.9rem; /* Smaller font size for mobile */
+    }
 
-        .product-info {
-            padding: 1rem;
-        }
+    .btn-add:hover {
+        background: #cc1a1a;
+    }
 
-        .product h3 {
-            font-family: 'Anton', sans-serif;
-            font-size: 1.5rem;
-            color: #ff2e2e;
-            margin-bottom: 0.5rem;
-        }
+    .cart-section {
+        text-align: center;
+        padding: 1.5rem; /* Reduced padding for mobile */
+    }
 
-        .product p {
-            font-size: 1rem;
-            color: #ccc;
-            margin: 0.5rem 0;
-        }
+    #cartPreview {
+        color: #ccc;
+    }
 
-        .btn-add {
-            background: #ff2e2e;
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
+    #cartPreview h2 {
+        color: #ff2e2e;
+        margin-bottom: 0.8rem;
+        font-size: 1.5rem; /* Smaller heading for mobile */
+    }
 
-        .btn-add:hover {
-            background: #cc1a1a;
-        }
+    #cartItems {
+        list-style: none;
+        padding: 0;
+        margin: 0 auto 1rem;
+        max-width: 90%; /* Adjust max-width for mobile */
+        text-align: left;
+    }
 
-        .cart-section {
-            text-align: center;
-            padding: 2rem;
-        }
+    #cartItems li {
+        padding: 4px 0;
+        font-size: 0.9rem; /* Smaller font size for mobile */
+    }
 
-        #cartPreview {
-            color: #ccc;
-        }
+    #referralInput {
+        margin-top: 1rem;
+        padding: 8px;
+        width: 80%; /* Percentage-based width for mobile */
+        border-radius: 8px;
+        border: none;
+        font-size: 0.9rem; /* Smaller font size for mobile */
+        background-color: #333;
+        color: #fff;
+        max-width: 300px; /* Still maintain a max-width */
+    }
 
-        #cartPreview h2 {
-            color: #ff2e2e;
-            margin-bottom: 1rem;
-        }
+    .cart-btn {
+        display: inline-block;
+        margin-top: 1.5rem; /* Reduced margin for mobile */
+        background: #25D366;
+        color: #000;
+        padding: 12px 25px; /* Slightly smaller padding for mobile */
+        font-size: 1rem; /* Smaller font size for mobile */
+        border-radius: 8px;
+        text-align: center;
+        text-decoration: none;
+    }
 
-        #cartItems {
-            list-style: none;
-            padding: 0;
-            margin: 0 auto 1rem;
-            max-width: 400px;
-            text-align: left;
-        }
+    .cart-btn:hover {
+        background: #128C7E;
+    }
 
-        #cartItems li {
-            padding: 5px 0;
-        }
+    #clearCartBtn {
+        display: block;
+        margin: 1.5rem auto; /* Reduced margin for mobile */
+        background: #ff4d4d;
+        color: #fff;
+        padding: 8px 15px; /* Slightly smaller padding for mobile */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9rem; /* Smaller font size for mobile */
+    }
 
-        #referralInput {
-            margin-top: 1rem;
-            padding: 10px;
-            width: 300px;
-            border-radius: 8px;
-            border: none;
-            font-size: 1rem;
-            background-color: #333;
-            color: #fff;
-        }
+    #clearCartBtn:hover {
+        background: #cc0000;
+    }
 
-        .cart-btn {
-            display: inline-block;
-            margin-top: 2rem;
-            background: #25D366;
-            color: #000;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            border-radius: 8px;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        .cart-btn:hover {
-            background: #128C7E;
-        }
-
-        #clearCartBtn {
-            display: block;
-            margin: 2rem auto;
-            background: #ff4d4d;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        #clearCartBtn:hover {
-            background: #cc0000;
-        }
-
-        footer {
-            background: #222;
-            padding: 1rem;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #888;
-        }
-    </style>
+    footer {
+        background: #222;
+        padding: 0.8rem; /* Reduced padding for mobile */
+        text-align: center;
+        font-size: 0.8rem; /* Smaller font size for mobile */
+        color: #888;
+    }
+</style>
 </head>
 <body class="loaded">
     <header>
@@ -245,6 +281,10 @@
                 <img src="eccentric1.jpg" alt="Adjustable Grip 1" class="active">
                 <img src="eccentric2.jpg" alt="Adjustable Grip 2">
                 <img src="eccentric3.jpg" alt="Adjustable Grip 3">
+                <div class="slider-controls">
+                    <button class="prev-btn">&lt;</button>
+                    <button class="next-btn">&gt;</button>
+                </div>
             </div>
             <div class="product-info">
                 <h3>Eccentric Grip</h3>
@@ -259,6 +299,10 @@
                 <img src="cupping1.jpg" alt="Cupping Grip 1" class="active">
                 <img src="cupping2.jpg" alt="Cupping Grip 2">
                 <img src="cupping3.jpg" alt="Cupping Grip 3">
+                <div class="slider-controls">
+                    <button class="prev-btn">&lt;</button>
+                    <button class="next-btn">&gt;</button>
+                </div>
             </div>
             <div class="product-info">
                 <h3>Cupping Grip</h3>
@@ -273,6 +317,10 @@
                 <img src="ultragrip1.jpg" alt="Ultra Grip 1" class="active">
                 <img src="ultragrip2.jpg" alt="Ultra Grip 2">
                 <img src="ultragrip3.jpg" alt="Ultra Grip 3">
+                <div class="slider-controls">
+                    <button class="prev-btn">&lt;</button>
+                    <button class="next-btn">&gt;</button>
+                </div>
             </div>
             <div class="product-info">
                 <h3>Ultra Grip</h3>
@@ -287,6 +335,10 @@
                 <img src="cone1.jpg" alt="Cone Grips 1" class="active">
                 <img src="cone2.jpg" alt="Cone Grips 2">
                 <img src="cone3.jpg" alt="Cone Grips 3">
+                <div class="slider-controls">
+                    <button class="prev-btn">&lt;</button>
+                    <button class="next-btn">&gt;</button>
+                </div>
             </div>
             <div class="product-info">
                 <h3>Cone Grips</h3>
@@ -301,6 +353,10 @@
                 <img src="offset1.jpg" alt="Offset Grip 1" class="active">
                 <img src="offset2.jpg" alt="Offset Grip 2">
                 <img src="offset3.jpg" alt="Offset Grip 3">
+                <div class="slider-controls">
+                    <button class="prev-btn">&lt;</button>
+                    <button class="next-btn">&gt;</button>
+                </div>
             </div>
             <div class="product-info">
                 <h3>Offset Grip</h3>
@@ -315,6 +371,10 @@
                 <img src="pns.jpg" alt="Pronation and Supination Grip 1" class="active">
                 <img src="pns2.jpg" alt="Pronation and Supination Grip 2">
                 <img src="pns3.jpg" alt="Pronation and Supination Grip 3">
+                <div class="slider-controls">
+                    <button class="prev-btn">&lt;</button>
+                    <button class="next-btn">&gt;</button>
+                </div>
             </div>
             <div class="product-info">
                 <h3>Pronation and Supination Grip</h3>
@@ -329,6 +389,10 @@
                 <img src="xgrip1.jpg" alt="Power Ball Grip 1" class="active">
                 <img src="xgrip2.jpg" alt="Power Ball Grip 2">
                 <img src="xgrip3.jpg" alt="Power Ball Grip 3">
+                <div class="slider-controls">
+                    <button class="prev-btn">&lt;</button>
+                    <button class="next-btn">&gt;</button>
+                </div>
             </div>
             <div class="product-info">
                 <h3>Y-Grip</h3>
@@ -342,6 +406,10 @@
             <div class="product-slider" data-slider-id="7">
                 <img src="handle1.jpg" alt="NavX Handle 1" class="active">
                 <img src="handle2.jpg" alt="NavX Handle 2">
+                <div class="slider-controls">
+                    <button class="prev-btn">&lt;</button>
+                    <button class="next-btn">&gt;</button>
+                </div>
             </div>
             <div class="product-info">
                 <h3>NavX Handle</h3>
@@ -358,6 +426,10 @@
                 <img src="eccentric2.jpg" alt="Spring Hand Grip 3">
                 <img src="cone1.jpg" alt="Spring Hand Grip 4">
                 <img src="xgrip1.jpg" alt="Spring Hand Grip 5">
+                <div class="slider-controls">
+                    <button class="prev-btn">&lt;</button>
+                    <button class="next-btn">&gt;</button>
+                </div>
             </div>
             <div class="product-info">
                 <h3> NavX Power Pack</h3>
@@ -380,6 +452,10 @@
                 <img src="cone1.jpg" alt="Spring Hand Grip 5">
                 <img src="xgrip1.jpg" alt="Spring Hand Grip 6">
                 <img src="cupping3.jpg" alt="Spring Hand Grip 7">
+                <div class="slider-controls">
+                    <button class="prev-btn">&lt;</button>
+                    <button class="next-btn">&gt;</button>
+                </div>
             </div>
             <div class="product-info">
                 <h3>NavX Pro Pack</h3>
@@ -403,6 +479,10 @@
                 <img src="cone1.jpg" alt="Ultimate 5">
                 <img src="cupping3.jpg" alt="Ultimate 6">
                 <img src="xgrip1.jpg" alt="Ultimate 7">
+                <div class="slider-controls">
+                    <button class="prev-btn">&lt;</button>
+                    <button class="next-btn">&gt;</button>
+                </div>
             </div>
             <div class="product-info">
                 <h3>NavX Ultimate Pack</h3>
@@ -440,34 +520,26 @@
 
             productSliders.forEach(slider => {
                 const images = slider.querySelectorAll('img');
+                const prevBtn = slider.querySelector('.prev-btn');
+                const nextBtn = slider.querySelector('.next-btn');
                 let currentIndex = 0;
-                let intervalId;
-                let sliderElement = slider;
 
                 function showImage(index) {
                     images.forEach(img => img.classList.remove('active'));
                     images[index].classList.add('active');
                 }
 
-                function startSlider() {
-                    intervalId = setInterval(() => {
-                        currentIndex = (currentIndex + 1) % images.length;
-                        showImage(currentIndex);
-                    }, 2000);
-                }
+                showImage(currentIndex); // Show the first image initially
 
-                function stopSlider() {
-                    clearInterval(intervalId);
-                }
-
-                showImage(currentIndex);
-
-                sliderElement.addEventListener('mouseenter', () => {
-                    startSlider();
+        // Arrow button functionality
+                prevBtn.addEventListener('click', () => {
+                    currentIndex = (currentIndex - 1 + images.length) % images.length;
+                    showImage(currentIndex);
                 });
 
-                sliderElement.addEventListener('mouseleave', () => {
-                    stopSlider();
+                nextBtn.addEventListener('click', () => {
+                    currentIndex = (currentIndex + 1) % images.length;
+                    showImage(currentIndex);
                 });
             });
 
